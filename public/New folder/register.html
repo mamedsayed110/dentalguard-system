@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="إنشاء حساب جديد في DentalGuard">
+    <title>التسجيل - DentalGuard</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Light Theme */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7f9fc;
+            --text-primary: #1a2332;
+            --text-secondary: #4a5568;
+            --medical-blue: #0066cc;
+            --accent-teal: #14b8a6;
+            --accent-gradient: linear-gradient(135deg, #0066cc 0%, #14b8a6 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(26, 35, 50, 0.08);
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.1);
+            --input-bg: #f8fafc;
+            --input-border: rgba(26, 35, 50, 0.1);
+            --input-focus: #0066cc;
+            --error-color: #ef4444;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #131925;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --medical-blue: #3b82f6;
+            --accent-teal: #14b8a6;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #14b8a6 100%);
+            --card-bg: rgba(26, 35, 50, 0.95);
+            --card-border: rgba(148, 163, 184, 0.12);
+            --glass-bg: rgba(26, 35, 50, 0.75);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.6);
+            --input-bg: rgba(26, 35, 50, 0.5);
+            --input-border: rgba(148, 163, 184, 0.15);
+            --input-focus: #3b82f6;
+            --error-color: #f87171;
+            --success-color: #34d399;
+            --warning-color: #fbbf24;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans Arabic', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body[dir="ltr"] {
+            font-family: 'Inter', -apple-system, sans-serif;
+        }
+
+        /* Background Decoration */
+        .bg-decoration {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.25;
+            animation: float 25s infinite ease-in-out;
+        }
+
+        [data-theme="dark"] .gradient-orb {
+            opacity: 0.15;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--accent-gradient);
+            top: -150px;
+            right: -100px;
+        }
+
+        body[dir="ltr"] .orb-1 {
+            right: auto;
+            left: -100px;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
+            bottom: -100px;
+            left: -100px;
+        }
+
+        body[dir="ltr"] .orb-2 {
+            left: auto;
+            right: -100px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--card-border);
+            padding: 1rem 2rem;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .icon-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .icon-btn:hover {
+            transform: translateY(-2px);
+            background: var(--medical-blue);
+            color: white;
+        }
+
+        .lang-btn {
+            padding: 0.6rem 1.2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn:hover {
+            background: var(--medical-blue);
+            color: white;
+        }
+
+        /* Main Container */
+        .register-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+        }
+
+        .register-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .register-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--accent-gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 0 12px 36px rgba(0, 102, 204, 0.3);
+        }
+
+        .register-title {
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .register-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .input-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            transition: color 0.3s ease;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        body[dir="rtl"] .input-icon {
+            right: 1.1rem;
+        }
+
+        body[dir="ltr"] .input-icon {
+            left: 1.1rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem;
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 12px;
+            font-size: 1rem;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        body[dir="rtl"] input {
+            padding-right: 3.2rem;
+            padding-left: 1rem;
+        }
+
+        body[dir="ltr"] input {
+            padding-left: 3.2rem;
+            padding-right: 1rem;
+        }
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--input-focus);
+            background: var(--bg-primary);
+            box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
+        }
+
+        input:focus ~ .input-icon {
+            color: var(--input-focus);
+        }
+
+        input.error {
+            border-color: var(--error-color);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        input.success {
+            border-color: var(--success-color);
+        }
+
+        input.checking {
+            border-color: var(--warning-color);
+        }
+
+        .checking-spinner {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--input-border);
+            border-top-color: var(--medical-blue);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: none;
+        }
+
+        body[dir="rtl"] .checking-spinner {
+            left: 1rem;
+        }
+
+        body[dir="ltr"] .checking-spinner {
+            right: 1rem;
+        }
+
+        input.checking ~ .checking-spinner {
+            display: block;
+        }
+
+        .password-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: stretch;
+            gap: 0.6rem;
+        }
+
+        .password-input-wrapper .input-container {
+            flex: 1;
+        }
+
+        .password-toggle {
+            width: 44px;
+            height: 44px;
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .password-toggle:hover {
+            background: var(--medical-blue);
+            color: white;
+            border-color: var(--medical-blue);
+        }
+
+        /* Password Strength */
+        .password-strength {
+            margin-top: 0.7rem;
+        }
+
+        .strength-bar {
+            height: 4px;
+            background: var(--input-border);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .strength-fill.weak {
+            width: 33%;
+            background: var(--error-color);
+        }
+
+        .strength-fill.medium {
+            width: 66%;
+            background: var(--warning-color);
+        }
+
+        .strength-fill.strong {
+            width: 100%;
+            background: var(--success-color);
+        }
+
+        .strength-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: none;
+        }
+
+        .strength-text.show {
+            display: block;
+        }
+
+        .strength-text.weak {
+            color: var(--error-color);
+        }
+
+        .strength-text.medium {
+            color: var(--warning-color);
+        }
+
+        .strength-text.strong {
+            color: var(--success-color);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .error-message.show {
+            display: flex;
+        }
+
+        .success-message {
+            color: var(--success-color);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .success-message.show {
+            display: flex;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1.1rem;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+            box-shadow: 0 8px 24px rgba(0, 102, 204, 0.3);
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn:hover:not(:disabled)::before {
+            left: 100%;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0, 102, 204, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-content {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .btn.loading .btn-content {
+            opacity: 0;
+        }
+
+        .spinner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        .btn.loading .spinner {
+            display: block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .divider {
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--card-border);
+        }
+
+        .divider span {
+            background: var(--card-bg);
+            padding: 0 1rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            position: relative;
+        }
+
+        .login-link {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .login-link a {
+            color: var(--medical-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .login-link a:hover {
+            color: var(--accent-teal);
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: none;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.95rem;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert.show {
+            display: flex;
+        }
+
+        .alert i {
+            font-size: 1.2rem;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1.5px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1.5px solid var(--error-color);
+            color: var(--error-color);
+        }
+
+        /* Security Badge */
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            padding: 0.8rem;
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: var(--success-color);
+        }
+
+        .security-badge i {
+            font-size: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .register-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .register-title {
+                font-size: 1.75rem;
+            }
+
+            nav {
+                padding: 1rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Decoration -->
+    <div class="bg-decoration">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <i class="fas fa-tooth"></i>
+                <span>DentalGuard</span>
+            </a>
+            <div class="nav-right">
+                <button class="icon-btn" id="themeToggle" title="تبديل الوضع">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="lang-btn" id="langSwitch">English</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="register-container">
+        <div class="register-card">
+            <div class="register-header">
+                <div class="register-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h1 class="register-title" data-ar="إنشاء حساب جديد" data-en="Create Account">
+                    إنشاء حساب جديد
+                </h1>
+                <p class="register-subtitle" data-ar="للحفاظ على خصوصيتك وبياناتك الطبية" data-en="To protect your privacy and medical data">
+                    للحفاظ على خصوصيتك وبياناتك الطبية
+                </p>
+            </div>
+
+            <!-- Alert Messages -->
+            <div class="alert alert-success" id="successAlert">
+                <i class="fas fa-check-circle"></i>
+                <span data-ar="تم إنشاء الحساب بنجاح! جاري التحويل..." data-en="Account created successfully! Redirecting...">
+                    تم إنشاء الحساب بنجاح! جاري التحويل...
+                </span>
+            </div>
+
+            <div class="alert alert-error" id="errorAlert">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorMessage"></span>
+            </div>
+
+            <!-- Register Form -->
+            <form id="registerForm">
+                <!-- Name Field -->
+                <div class="form-group">
+                    <label for="name" data-ar="الاسم الكامل" data-en="Full Name">الاسم الكامل</label>
+                    <div class="input-container">
+                        <input 
+                            type="text" 
+                            id="name" 
+                            name="name" 
+                            required
+                            autocomplete="name"
+                            data-ar-placeholder="أدخل اسمك الكامل"
+                            data-en-placeholder="Enter your full name"
+                            placeholder="أدخل اسمك الكامل"
+                        >
+                        <i class="fas fa-user input-icon"></i>
+                    </div>
+                    <div class="error-message" id="nameError">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span></span>
+                    </div>
+                    <div class="success-message" id="nameSuccess">
+                        <i class="fas fa-check-circle"></i>
+                        <span data-ar="الاسم صحيح" data-en="Name is valid">الاسم صحيح</span>
+                    </div>
+                </div>
+
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label for="email" data-ar="البريد الإلكتروني" data-en="Email Address">البريد الإلكتروني</label>
+                    <div class="input-container">
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            required
+                            autocomplete="email"
+                            data-ar-placeholder="example@email.com"
+                            data-en-placeholder="example@email.com"
+                            placeholder="example@email.com"
+                        >
+                        <i class="fas fa-envelope input-icon"></i>
+                        <div class="checking-spinner"></div>
+                    </div>
+                    <div class="error-message" id="emailError">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span></span>
+                    </div>
+                    <div class="success-message" id="emailSuccess">
+                        <i class="fas fa-check-circle"></i>
+                        <span data-ar="البريد متاح" data-en="Email is available">البريد متاح</span>
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label for="password" data-ar="كلمة المرور" data-en="Password">كلمة المرور</label>
+                    <div class="password-input-wrapper">
+                        <div class="input-container">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                required
+                                autocomplete="new-password"
+                                data-ar-placeholder="8 أحرف على الأقل"
+                                data-en-placeholder="At least 8 characters"
+                                placeholder="8 أحرف على الأقل"
+                            >
+                            <i class="fas fa-lock input-icon"></i>
+                        </div>
+                        <button type="button" class="password-toggle" id="togglePassword" title="إظهار/إخفاء">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                        <div class="strength-text" id="strengthText"></div>
+                    </div>
+                    <div class="error-message" id="passwordError">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span></span>
+                    </div>
+                </div>
+
+                <!-- Password Confirmation Field -->
+                <div class="form-group">
+                    <label for="password_confirmation" data-ar="تأكيد كلمة المرور" data-en="Confirm Password">تأكيد كلمة المرور</label>
+                    <div class="password-input-wrapper">
+                        <div class="input-container">
+                            <input 
+                                type="password" 
+                                id="password_confirmation" 
+                                name="password_confirmation" 
+                                required
+                                autocomplete="new-password"
+                                data-ar-placeholder="أعد إدخال كلمة المرور"
+                                data-en-placeholder="Re-enter your password"
+                                placeholder="أعد إدخال كلمة المرور"
+                            >
+                            <i class="fas fa-lock input-icon"></i>
+                        </div>
+                        <button type="button" class="password-toggle" id="togglePasswordConfirm" title="إظهار/إخفاء">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="error-message" id="passwordConfirmError">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span></span>
+                    </div>
+                    <div class="success-message" id="passwordConfirmSuccess">
+                        <i class="fas fa-check-circle"></i>
+                        <span data-ar="كلمات المرور متطابقة" data-en="Passwords match">كلمات المرور متطابقة</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" id="submitBtn">
+                    <div class="spinner"></div>
+                    <div class="btn-content">
+                        <span data-ar="إنشاء الحساب" data-en="Create Account">إنشاء الحساب</span>
+                        <i class="fas fa-arrow-left"></i>
+                    </div>
+                </button>
+
+                <!-- Security Badge -->
+                <div class="security-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span data-ar="جميع البيانات مشفرة وآمنة" data-en="All data is encrypted and secure">
+                        جميع البيانات مشفرة وآمنة
+                    </span>
+                </div>
+            </form>
+
+            <div class="divider">
+                <span data-ar="أو" data-en="or">أو</span>
+            </div>
+
+            <div class="login-link">
+                <span data-ar="لديك حساب بالفعل؟" data-en="Already have an account?">لديك حساب بالفعل؟</span>
+                <a href="/login" data-ar="تسجيل الدخول" data-en="Sign In">تسجيل الدخول</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Security: Honeypot (invisible field to catch bots)
+        const honeypot = document.createElement('input');
+        honeypot.type = 'text';
+        honeypot.name = 'website';
+        honeypot.style.display = 'none';
+        honeypot.tabIndex = -1;
+        honeypot.autocomplete = 'off';
+        document.getElementById('registerForm').appendChild(honeypot);
+
+        // Security: Track form interaction time (prevent instant submissions)
+        let formStartTime = Date.now();
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const themeIcon = themeToggle.querySelector('i');
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+
+        function updateThemeIcon(theme) {
+            themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        // Language Toggle
+        const langSwitch = document.getElementById('langSwitch');
+        const htmlRoot = document.querySelector('html');
+        let currentLang = 'ar';
+        
+        langSwitch.addEventListener('click', () => {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            
+            if (currentLang === 'ar') {
+                htmlRoot.setAttribute('lang', 'ar');
+                htmlRoot.setAttribute('dir', 'rtl');
+                langSwitch.textContent = 'English';
+            } else {
+                htmlRoot.setAttribute('lang', 'en');
+                htmlRoot.setAttribute('dir', 'ltr');
+                langSwitch.textContent = 'عربي';
+            }
+            
+            // Update text
+            document.querySelectorAll('[data-ar][data-en]').forEach(el => {
+                const newText = currentLang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = newText;
+                } else {
+                    el.textContent = newText;
+                }
+            });
+
+            // Update placeholders
+            document.querySelectorAll('[data-ar-placeholder][data-en-placeholder]').forEach(el => {
+                const newPlaceholder = currentLang === 'ar' ? el.getAttribute('data-ar-placeholder') : el.getAttribute('data-en-placeholder');
+                el.placeholder = newPlaceholder;
+            });
+        });
+
+        // Password Toggle
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+        const togglePasswordConfirm = document.getElementById('togglePasswordConfirm');
+        const passwordConfirm = document.getElementById('password_confirmation');
+
+        togglePassword.addEventListener('click', () => {
+            const type = password.type === 'password' ? 'text' : 'password';
+            password.type = type;
+            togglePassword.querySelector('i').classList.toggle('fa-eye');
+            togglePassword.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+
+        togglePasswordConfirm.addEventListener('click', () => {
+            const type = passwordConfirm.type === 'password' ? 'text' : 'password';
+            passwordConfirm.type = type;
+            togglePasswordConfirm.querySelector('i').classList.toggle('fa-eye');
+            togglePasswordConfirm.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+
+        // Password Strength Checker
+        const strengthFill = document.getElementById('strengthFill');
+        const strengthText = document.getElementById('strengthText');
+
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            let feedback = '';
+
+            if (password.length === 0) {
+                strengthFill.className = 'strength-fill';
+                strengthText.className = 'strength-text';
+                strengthText.textContent = '';
+                return;
+            }
+
+            // Length check
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+
+            // Character variety
+            if (/[a-z]/.test(password)) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+            // Determine strength level
+            if (strength <= 2) {
+                strengthFill.className = 'strength-fill weak';
+                strengthText.className = 'strength-text weak show';
+                feedback = currentLang === 'ar' ? 'ضعيفة' : 'Weak';
+            } else if (strength <= 4) {
+                strengthFill.className = 'strength-fill medium';
+                strengthText.className = 'strength-text medium show';
+                feedback = currentLang === 'ar' ? 'متوسطة' : 'Medium';
+            } else {
+                strengthFill.className = 'strength-fill strong';
+                strengthText.className = 'strength-text strong show';
+                feedback = currentLang === 'ar' ? 'قوية' : 'Strong';
+            }
+
+            strengthText.textContent = currentLang === 'ar' ? `قوة كلمة المرور: ${feedback}` : `Password Strength: ${feedback}`;
+        }
+
+        password.addEventListener('input', (e) => {
+            checkPasswordStrength(e.target.value);
+        });
+
+        // Input Sanitization
+        function sanitizeInput(input) {
+            return input.replace(/<[^>]*>/g, '').trim();
+        }
+
+        // Validation Functions
+        function showError(inputId, message) {
+            const input = document.getElementById(inputId);
+            const errorEl = document.getElementById(inputId + 'Error');
+            const successEl = document.getElementById(inputId + 'Success');
+            
+            if (input) input.classList.add('error');
+            if (input) input.classList.remove('success');
+            if (errorEl) {
+                errorEl.querySelector('span').textContent = message;
+                errorEl.classList.add('show');
+            }
+            if (successEl) successEl.classList.remove('show');
+        }
+
+        function showSuccess(inputId) {
+            const input = document.getElementById(inputId);
+            const errorEl = document.getElementById(inputId + 'Error');
+            const successEl = document.getElementById(inputId + 'Success');
+            
+            if (input) input.classList.remove('error');
+            if (input) input.classList.add('success');
+            if (errorEl) errorEl.classList.remove('show');
+            if (successEl) successEl.classList.add('show');
+        }
+
+        function clearError(inputId) {
+            const input = document.getElementById(inputId);
+            const errorEl = document.getElementById(inputId + 'Error');
+            const successEl = document.getElementById(inputId + 'Success');
+            
+            if (input) input.classList.remove('error');
+            if (input) input.classList.remove('success');
+            if (errorEl) errorEl.classList.remove('show');
+            if (successEl) successEl.classList.remove('show');
+        }
+
+        function clearAllErrors() {
+            const fields = ['name', 'email', 'password', 'password_confirmation', 'passwordConfirm'];
+            fields.forEach(field => clearError(field));
+            
+            const errorAlert = document.getElementById('errorAlert');
+            if (errorAlert) errorAlert.classList.remove('show');
+        }
+
+        // Real-time Validation
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const passwordConfirmInput = document.getElementById('password_confirmation');
+
+        // Debounce function for performance
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Live Email Availability Check
+        async function checkEmailAvailability(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return;
+            }
+
+            // Show checking state
+            emailInput.classList.add('checking');
+            emailInput.classList.remove('success', 'error');
+            clearError('email');
+
+            try {
+                const response = await fetch(`http://localhost:8000/api/check-email?email=${encodeURIComponent(email)}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                emailInput.classList.remove('checking');
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data.available === false || data.exists === true) {
+                        showError('email', currentLang === 'ar' ? 'البريد الإلكتروني مستخدم بالفعل' : 'Email is already taken');
+                    } else {
+                        showSuccess('email');
+                    }
+                } else if (response.status === 404) {
+                    // Endpoint doesn't exist - fallback to showing success
+                    showSuccess('email');
+                } else {
+                    // Email might be taken based on error response
+                    try {
+                        const data = await response.json();
+                        if (data.message && data.message.includes('taken')) {
+                            showError('email', currentLang === 'ar' ? 'البريد الإلكتروني مستخدم بالفعل' : 'Email is already taken');
+                        }
+                    } catch {
+                        showSuccess('email');
+                    }
+                }
+            } catch (error) {
+                console.log('Email check failed:', error);
+                emailInput.classList.remove('checking');
+                // Don't show error - just remove checking state
+            }
+        }
+
+        const debouncedEmailCheck = debounce(checkEmailAvailability, 800);
+
+        nameInput.addEventListener('blur', () => {
+            const value = sanitizeInput(nameInput.value);
+            if (value.length < 3) {
+                showError('name', currentLang === 'ar' ? 'الاسم يجب أن يكون 3 أحرف على الأقل' : 'Name must be at least 3 characters');
+            } else if (value.length > 0) {
+                showSuccess('name');
+            }
+        });
+
+        nameInput.addEventListener('input', () => {
+            if (nameInput.value.length > 0) {
+                clearError('name');
+            }
+        });
+
+        emailInput.addEventListener('blur', () => {
+            const value = sanitizeInput(emailInput.value);
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                showError('email', currentLang === 'ar' ? 'البريد الإلكتروني غير صحيح' : 'Invalid email address');
+            } else {
+                showSuccess('email');
+            }
+        });
+
+        emailInput.addEventListener('input', () => {
+            if (emailInput.value.length > 0) {
+                clearError('email');
+                // Trigger live check after user stops typing
+                debouncedEmailCheck(sanitizeInput(emailInput.value));
+            } else {
+                emailInput.classList.remove('checking');
+            }
+        });
+
+        passwordInput.addEventListener('blur', () => {
+            if (passwordInput.value.length > 0 && passwordInput.value.length < 8) {
+                showError('password', currentLang === 'ar' ? 'كلمة المرور يجب أن تكون 8 أحرف على الأقل' : 'Password must be at least 8 characters');
+            }
+        });
+
+        passwordInput.addEventListener('input', () => {
+            clearError('password');
+            // Check password match if confirmation is filled
+            if (passwordConfirmInput.value.length > 0) {
+                checkPasswordMatch();
+            }
+        });
+
+        function checkPasswordMatch() {
+            if (passwordInput.value !== passwordConfirmInput.value) {
+                showError('password_confirmation', currentLang === 'ar' ? 'كلمات المرور غير متطابقة' : 'Passwords do not match');
+            } else if (passwordConfirmInput.value.length > 0) {
+                showSuccess('password_confirmation');
+            }
+        }
+
+        passwordConfirmInput.addEventListener('blur', checkPasswordMatch);
+
+        passwordConfirmInput.addEventListener('input', () => {
+            if (passwordConfirmInput.value.length > 0) {
+                clearError('password_confirmation');
+            }
+        });
+
+        // Form Validation
+        function validateForm() {
+            clearAllErrors();
+            let isValid = true;
+
+            const nameVal = sanitizeInput(nameInput.value);
+            const emailVal = sanitizeInput(emailInput.value);
+            const passwordVal = passwordInput.value;
+            const passwordConfirmVal = passwordConfirmInput.value;
+
+            // Name validation
+            if (nameVal.length < 3) {
+                showError('name', currentLang === 'ar' ? 'الاسم يجب أن يكون 3 أحرف على الأقل' : 'Name must be at least 3 characters');
+                isValid = false;
+            } else if (nameVal.length > 100) {
+                showError('name', currentLang === 'ar' ? 'الاسم طويل جداً' : 'Name is too long');
+                isValid = false;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailVal)) {
+                showError('email', currentLang === 'ar' ? 'البريد الإلكتروني غير صحيح' : 'Invalid email address');
+                isValid = false;
+            }
+
+            // Password validation
+            if (passwordVal.length < 8) {
+                showError('password', currentLang === 'ar' ? 'كلمة المرور يجب أن تكون 8 أحرف على الأقل' : 'Password must be at least 8 characters');
+                isValid = false;
+            } else if (passwordVal.length > 128) {
+                showError('password', currentLang === 'ar' ? 'كلمة المرور طويلة جداً' : 'Password is too long');
+                isValid = false;
+            }
+
+            // Password confirmation
+            if (passwordVal !== passwordConfirmVal) {
+                showError('password_confirmation', currentLang === 'ar' ? 'كلمات المرور غير متطابقة' : 'Passwords do not match');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Form Submission
+        const form = document.getElementById('registerForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successAlert = document.getElementById('successAlert');
+        const errorAlert = document.getElementById('errorAlert');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Rate Limiting
+        let lastSubmitTime = 0;
+        const SUBMIT_COOLDOWN = 3000; // 3 seconds
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Security: Check honeypot
+            if (honeypot.value !== '') {
+                console.warn('Bot detected');
+                return;
+            }
+
+            // Security: Check interaction time (prevent instant submissions)
+            const interactionTime = Date.now() - formStartTime;
+            if (interactionTime < 2000) {
+                showErrorAlert(currentLang === 'ar' ? 'يرجى التحقق من البيانات' : 'Please verify your data');
+                return;
+            }
+
+            // Security: Rate limiting
+            const now = Date.now();
+            if (now - lastSubmitTime < SUBMIT_COOLDOWN) {
+                showErrorAlert(currentLang === 'ar' ? 'يرجى الانتظار قبل المحاولة مرة أخرى' : 'Please wait before trying again');
+                return;
+            }
+            lastSubmitTime = now;
+
+            if (!validateForm()) {
+                return;
+            }
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.classList.add('loading');
+
+            // Prepare data (with sanitization)
+            const formData = {
+                name: sanitizeInput(nameInput.value),
+                email: sanitizeInput(emailInput.value),
+                password: passwordInput.value,
+                password_confirmation: passwordConfirmInput.value
+            };
+
+            console.log('Form submitted');
+            console.log('Validation passed');
+            console.log('Sending data:', { ...formData, password: '***', password_confirmation: '***' });
+
+            try {
+                // API Call
+                const response = await fetch('http://localhost:8000/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                console.log('Response status:', response.status);
+
+                const data = await response.json();
+                console.log('Response data:', data);
+
+                if (response.ok) {
+                    // Success
+                    successAlert.classList.add('show');
+                    form.reset();
+                    clearAllErrors();
+                    
+                    // Save token
+                    if (data.token) {
+                        localStorage.setItem('auth_token', data.token);
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                    }
+
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1500);
+
+                } else {
+                    // Error handling
+                    if (data.errors) {
+                        // Validation errors
+                        for (let field in data.errors) {
+                            if (field === 'email') showError('email', data.errors[field][0]);
+                            if (field === 'password') showError('password', data.errors[field][0]);
+                            if (field === 'name') showError('name', data.errors[field][0]);
+                        }
+                        showErrorAlert(Object.values(data.errors).flat().join(' '));
+                    } else {
+                        showErrorAlert(data.message || (currentLang === 'ar' ? 'حدث خطأ. حاول مرة أخرى.' : 'An error occurred. Please try again.'));
+                    }
+
+                    // Reset button
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('loading');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                showErrorAlert(currentLang === 'ar' ? 
+                    'خطأ في الاتصال بالخادم. تأكد من تشغيل الخادم.' : 
+                    'Connection error. Make sure the server is running.');
+                
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('loading');
+            }
+        });
+
+        function showErrorAlert(message) {
+            errorAlert.classList.add('show');
+            errorMessage.textContent = message;
+            setTimeout(() => {
+                errorAlert.classList.remove('show');
+            }, 5000);
+        }
+
+        // Security: Disable paste in password confirmation (best practice)
+        passwordConfirmInput.addEventListener('paste', (e) => {
+            e.preventDefault();
+            showError('password_confirmation', currentLang === 'ar' ? 'يرجى كتابة كلمة المرور يدوياً' : 'Please type password manually');
+            setTimeout(() => clearError('password_confirmation'), 3000);
+        });
+    </script>
+</body>
+</html>

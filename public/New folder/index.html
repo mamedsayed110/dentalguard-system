@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="نظام ذكي لتشخيص أمراض الأسنان باستخدام الذكاء الاصطناعي">
+    <title>DentalGuard - ذكاء اصطناعي لتشخيص أمراض الأسنان</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Light Theme - Medical Blue Palette */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7f9fc;
+            --bg-tertiary: #eef2f7;
+            --text-primary: #1a2332;
+            --text-secondary: #4a5568;
+            --text-tertiary: #718096;
+            
+            /* Medical Accent Colors */
+            --medical-blue: #0066cc;
+            --medical-blue-light: #4d94ff;
+            --medical-blue-dark: #004d99;
+            --accent-teal: #14b8a6;
+            --accent-purple: #8b5cf6;
+            --accent-gradient: linear-gradient(135deg, #0066cc 0%, #14b8a6 100%);
+            --accent-gradient-alt: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            
+            /* Card & Glass */
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(26, 35, 50, 0.08);
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            
+            /* Shadows */
+            --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.12);
+            
+            /* Navigation */
+            --nav-bg: rgba(255, 255, 255, 0.85);
+            --nav-blur: blur(24px);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme - Deep Blue Palette */
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #131925;
+            --bg-tertiary: #1a2332;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
+            
+            /* Medical Accent Colors (Adjusted for dark) */
+            --medical-blue: #3b82f6;
+            --medical-blue-light: #60a5fa;
+            --medical-blue-dark: #2563eb;
+            --accent-teal: #14b8a6;
+            --accent-purple: #a78bfa;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #14b8a6 100%);
+            --accent-gradient-alt: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
+            
+            /* Card & Glass */
+            --card-bg: rgba(26, 35, 50, 0.95);
+            --card-border: rgba(148, 163, 184, 0.12);
+            --glass-bg: rgba(26, 35, 50, 0.75);
+            --glass-border: rgba(148, 163, 184, 0.15);
+            
+            /* Shadows */
+            --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.6);
+            --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.7);
+            
+            /* Navigation */
+            --nav-bg: rgba(10, 14, 26, 0.85);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans Arabic', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body[dir="ltr"] {
+            font-family: 'Inter', -apple-system, sans-serif;
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--medical-blue);
+            color: white;
+        }
+
+        /* Background Decoration */
+        .bg-decoration {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.25;
+            animation: float 25s infinite ease-in-out;
+            will-change: transform;
+        }
+
+        [data-theme="dark"] .gradient-orb {
+            opacity: 0.15;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--accent-gradient);
+            top: -250px;
+            right: -200px;
+            animation-delay: 0s;
+        }
+
+        body[dir="ltr"] .orb-1 {
+            right: auto;
+            left: -200px;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--accent-gradient-alt);
+            bottom: -200px;
+            left: -150px;
+            animation-delay: 8s;
+        }
+
+        body[dir="ltr"] .orb-2 {
+            left: auto;
+            right: -150px;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #14b8a6 0%, #06b6d4 100%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 16s;
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translate(0, 0) scale(1);
+                opacity: 0.25;
+            }
+            33% { 
+                transform: translate(60px, -60px) scale(1.1);
+                opacity: 0.3;
+            }
+            66% { 
+                transform: translate(-60px, 60px) scale(0.95);
+                opacity: 0.2;
+            }
+        }
+
+        [data-theme="dark"] @keyframes float {
+            0%, 100% { opacity: 0.15; }
+            33% { opacity: 0.2; }
+            66% { opacity: 0.12; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--nav-bg);
+            backdrop-filter: var(--nav-blur);
+            -webkit-backdrop-filter: var(--nav-blur);
+            z-index: 1000;
+            border-bottom: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.03em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo i {
+            font-size: 1.5rem;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-gradient);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--medical-blue);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .icon-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+            box-shadow: var(--shadow-xs);
+        }
+
+        .icon-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+            background: var(--medical-blue);
+            color: white;
+        }
+
+        .lang-btn {
+            padding: 0.6rem 1.2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-xs);
+        }
+
+        .lang-btn:hover {
+            background: var(--medical-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .cta-nav {
+            padding: 0.7rem 1.5rem;
+            background: var(--accent-gradient);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cta-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 10rem 2rem 6rem;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+        }
+
+        .hero-content {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--medical-blue);
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-xs);
+        }
+
+        .hero-badge i {
+            font-size: 1rem;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            line-height: 1.15;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.04em;
+        }
+
+        .hero-content .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+            max-width: 580px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: 0 8px 24px rgba(0, 102, 204, 0.3);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0, 102, 204, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border: 2px solid var(--card-border);
+            box-shadow: var(--shadow-xs);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-sm);
+            border-color: var(--medical-blue);
+            color: var(--medical-blue);
+        }
+
+        /* Hero Visual */
+        .hero-visual {
+            position: relative;
+            height: 600px;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .glass-card {
+            position: absolute;
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.4s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .card-main {
+            width: 450px;
+            height: 520px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: floatCard 6s ease-in-out infinite;
+        }
+
+        .card-float {
+            width: 180px;
+            height: 140px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .card-float-1 {
+            top: 5%;
+            right: -8%;
+            animation: floatCard 5s ease-in-out infinite 1s;
+        }
+
+        body[dir="ltr"] .card-float-1 {
+            right: auto;
+            left: -8%;
+        }
+
+        .card-float-2 {
+            bottom: 8%;
+            left: -10%;
+            animation: floatCard 7s ease-in-out infinite 2s;
+        }
+
+        body[dir="ltr"] .card-float-2 {
+            left: auto;
+            right: -10%;
+        }
+
+        @keyframes floatCard {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-20px); }
+        }
+
+        .visual-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            gap: 1.5rem;
+        }
+
+        .visual-icon {
+            width: 120px;
+            height: 120px;
+            background: var(--accent-gradient);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+            box-shadow: 0 12px 36px rgba(0, 102, 204, 0.3);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .visual-text {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .visual-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .visual-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .visual-feature i {
+            color: var(--accent-teal);
+            font-size: 1.1rem;
+        }
+
+        .mini-stat {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .mini-stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.3rem;
+            display: block;
+        }
+
+        .mini-stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 4rem 2rem;
+            background: var(--bg-secondary);
+        }
+
+        .stats-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid var(--card-border);
+            transition: all 0.4s ease;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-gradient);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--accent-gradient);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.25);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            display: block;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* Section Header */
+        .section {
+            padding: 6rem 2rem;
+        }
+
+        .section-alt {
+            background: var(--bg-secondary);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--medical-blue);
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-xs);
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--accent-gradient);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--accent-gradient);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: white;
+            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.25);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .feature-desc {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        /* Steps */
+        .steps-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            position: relative;
+        }
+
+        .step-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            text-align: center;
+            transition: all 0.4s ease;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+
+        .step-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: var(--accent-gradient);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 12px 32px rgba(0, 102, 204, 0.3);
+            position: relative;
+        }
+
+        .step-number::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--medical-blue);
+            animation: ripple 2s infinite;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .step-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--medical-blue);
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .step-desc {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 2rem;
+            background: var(--accent-gradient);
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -200px;
+            right: -200px;
+            animation: float 20s infinite;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+        }
+
+        .cta-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.95;
+            line-height: 1.8;
+        }
+
+        .cta-content .btn-primary {
+            background: white;
+            color: var(--medical-blue);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .cta-content .btn-primary:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            padding: 4rem 2rem 2rem;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-brand p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            background: var(--medical-blue);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .footer-section h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            color: var(--text-primary);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.7rem;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .footer-section a:hover {
+            color: var(--medical-blue);
+            transform: translateX(5px);
+        }
+
+        body[dir="ltr"] .footer-section a:hover {
+            transform: translateX(-5px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 4rem;
+                text-align: center;
+            }
+
+            .hero-content h1 {
+                font-size: 3.5rem;
+            }
+
+            .hero-content .subtitle {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .hero-visual {
+                height: 500px;
+            }
+
+            .card-main {
+                width: 400px;
+                height: 450px;
+            }
+
+            .features-grid,
+            .steps-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 8rem 1.5rem 4rem;
+                min-height: auto;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+            }
+
+            .section-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .features-grid,
+            .steps-container,
+            .stats-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+
+            .hero-visual,
+            .card-float-1,
+            .card-float-2 {
+                display: none;
+            }
+
+            .cta-content h2 {
+                font-size: 2.2rem;
+            }
+
+            .cta-content p {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 1rem 1.5rem;
+            }
+
+            .logo {
+                font-size: 1.4rem;
+            }
+
+            .controls {
+                gap: 0.5rem;
+            }
+
+            .lang-btn,
+            .cta-nav {
+                font-size: 0.8rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .btn {
+                padding: 0.9rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Animation Classes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Loading State */
+        .loading {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Decoration -->
+    <div class="bg-decoration">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-tooth"></i>
+                <span>DentalGuard</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features" data-ar="المميزات" data-en="Features">المميزات</a></li>
+                <li><a href="#how" data-ar="كيف يعمل" data-en="How It Works">كيف يعمل</a></li>
+            </ul>
+            <div class="controls">
+                <button class="icon-btn" id="themeToggle" title="تبديل الوضع" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="lang-btn" id="langSwitch">English</button>
+                <a href="/login" class="cta-nav" data-ar="تسجيل الدخول" data-en="Sign In">
+                    <span>تسجيل الدخول</span>
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-sparkles"></i>
+                    <span data-ar="تقنية متقدمة للتشخيص الطبي" data-en="Advanced Medical Diagnostics">تقنية متقدمة للتشخيص الطبي</span>
+                </div>
+                <h1 data-ar="الذكاء الاصطناعي لتشخيص أمراض الأسنان" data-en="AI-Powered Dental Disease Detection">
+                    الذكاء الاصطناعي لتشخيص أمراض الأسنان
+                </h1>
+                <p class="subtitle" data-ar="نظام ذكي يستخدم تقنيات التعلم العميق لتحليل صور الأشعة السينية وتقديم تشخيص دقيق وسريع لمختلف أمراض الأسنان واللثة" data-en="Smart system using deep learning to analyze X-rays and provide accurate diagnosis">
+                    نظام ذكي يستخدم تقنيات التعلم العميق لتحليل صور الأشعة السينية وتقديم تشخيص دقيق وسريع لمختلف أمراض الأسنان واللثة
+                </p>
+                <div class="hero-buttons">
+                    <a href="/register" class="btn btn-primary" data-ar="جرب الآن" data-en="Try Now">
+                        <span>جرب الآن</span>
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="glass-card card-main">
+                    <div class="visual-content">
+                        <div class="visual-icon">
+                            <i class="fas fa-tooth"></i>
+                        </div>
+                        <div class="visual-text" data-ar="تحليل فوري ودقيق" data-en="Instant & Accurate">
+                            تحليل فوري ودقيق
+                        </div>
+                        <div class="visual-features">
+                            <div class="visual-feature">
+                                <i class="fas fa-check-circle"></i>
+                                <span data-ar="دقة 98% في التشخيص" data-en="98% Accuracy">دقة 98% في التشخيص</span>
+                            </div>
+                            <div class="visual-feature">
+                                <i class="fas fa-check-circle"></i>
+                                <span data-ar="نتائج في 5 ثوانٍ" data-en="Results in 5 seconds">نتائج في 5 ثوانٍ</span>
+                            </div>
+                            <div class="visual-feature">
+                                <i class="fas fa-check-circle"></i>
+                                <span data-ar="آمن ومشفّر بالكامل" data-en="Fully Encrypted">آمن ومشفّر بالكامل</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card card-float card-float-1">
+                    <div class="mini-stat">
+                        <span class="mini-stat-value">98%</span>
+                        <div class="mini-stat-label" data-ar="دقة التشخيص" data-en="Accuracy">دقة التشخيص</div>
+                    </div>
+                </div>
+                <div class="glass-card card-float card-float-2">
+                    <div class="mini-stat">
+                        <span class="mini-stat-value">5 ث</span>
+                        <div class="mini-stat-label" data-ar="سرعة التحليل" data-en="Speed">سرعة التحليل</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-images"></i>
+                </div>
+                <span class="stat-number" data-count="30000">0</span>
+                <div class="stat-label" data-ar="صورة تم تحليلها" data-en="Images Analyzed">صورة تم تحليلها</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <span class="stat-number" data-count="98">0</span>
+                <div class="stat-label" data-ar="نسبة الدقة %" data-en="Accuracy Rate %">نسبة الدقة %</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <span class="stat-number" data-count="3">0</span>
+                <div class="stat-label" data-ar="ثانية للتحليل" data-en="Seconds to Analyze">ثانية للتحليل</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" id="features">
+        <div class="section-header">
+            <div class="section-badge">
+                <i class="fas fa-star"></i>
+                <span data-ar="المميزات" data-en="Features">المميزات</span>
+            </div>
+            <h2 class="section-title" data-ar="لماذا DentalGuard؟" data-en="Why DentalGuard?">
+                لماذا DentalGuard؟
+            </h2>
+            <p class="section-subtitle" data-ar="نظام شامل ومتطور مصمم لتقديم أفضل تجربة تشخيصية" data-en="Comprehensive system designed for the best diagnostic experience">
+                نظام شامل ومتطور مصمم لتقديم أفضل تجربة تشخيصية
+            </p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3 class="feature-title" data-ar="ذكاء اصطناعي متقدم" data-en="Advanced AI">ذكاء اصطناعي متقدم</h3>
+                <p class="feature-desc" data-ar="نستخدم شبكات عصبية عميقة مدربة على آلاف الحالات الطبية لضمان أعلى دقة في التشخيص" data-en="Using deep neural networks trained on thousands of medical cases">
+                    نستخدم شبكات عصبية عميقة مدربة على آلاف الحالات الطبية لضمان أعلى دقة في التشخيص
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="feature-title" data-ar="سرعة استثنائية" data-en="Exceptional Speed">سرعة استثنائية</h3>
+                <p class="feature-desc" data-ar="احصل على نتائج التحليل في 5 ثوانٍ فقط، مما يوفر الوقت ويسرّع عملية التشخيص" data-en="Get analysis results in just 3 seconds">
+                    احصل على نتائج التحليل في 5 ثوانٍ فقط، مما يوفر الوقت ويسرّع عملية التشخيص
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="feature-title" data-ar="أمان وخصوصية" data-en="Security & Privacy">أمان وخصوصية</h3>
+                <p class="feature-desc" data-ar="جميع البيانات مشفرة بأحدث معايير الأمان، مع عدم حفظ أي معلومات شخصية على خوادمنا" data-en="All data encrypted with the latest security standards">
+                    جميع البيانات مشفرة بأحدث معايير الأمان، مع عدم حفظ أي معلومات شخصية على خوادمنا
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-file-medical-alt"></i>
+                </div>
+                <h3 class="feature-title" data-ar="تقارير شاملة" data-en="Comprehensive Reports">تقارير شاملة</h3>
+                <p class="feature-desc" data-ar="تقارير مفصلة تتضمن نوع المرض، مستوى الخطورة، ونسبة الثقة، مع توصيات علاجية" data-en="Detailed reports with disease type, severity, and recommendations">
+                    تقارير مفصلة تتضمن نوع المرض، مستوى الخطورة، ونسبة الثقة، مع توصيات علاجية
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3 class="feature-title" data-ar="متعدد المنصات" data-en="Multi-Platform">متعدد المنصات</h3>
+                <p class="feature-desc" data-ar="يعمل على جميع الأجهزة - كمبيوتر، هاتف، تابلت - بدون الحاجة لتحميل أي برامج" data-en="Works on all devices without downloads">
+                    يعمل على جميع الأجهزة - كمبيوتر، هاتف، تابلت - بدون الحاجة لتحميل أي برامج
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <h3 class="feature-title" data-ar="دقة عالية" data-en="High Accuracy">دقة عالية</h3>
+                <p class="feature-desc" data-ar="معدل دقة يصل إلى 98% في تشخيص مختلف أمراض الأسنان بناءً على بحوث علمية معتمدة" data-en="98% accuracy rate based on scientific research">
+                    معدل دقة يصل إلى 98% في تشخيص مختلف أمراض الأسنان بناءً على بحوث علمية معتمدة
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section section-alt" id="how">
+        <div class="section-header">
+            <div class="section-badge">
+                <i class="fas fa-cogs"></i>
+                <span data-ar="آلية العمل" data-en="How It Works">آلية العمل</span>
+            </div>
+            <h2 class="section-title" data-ar="كيف يعمل النظام؟" data-en="How Does It Work?">
+                كيف يعمل النظام؟
+            </h2>
+            <p class="section-subtitle" data-ar="ثلاث خطوات بسيطة للحصول على تشخيص دقيق في ثوانٍ" data-en="Three simple steps for accurate diagnosis">
+                ثلاث خطوات بسيطة للحصول على تشخيص دقيق في ثوانٍ
+            </p>
+        </div>
+
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h3 class="step-title" data-ar="رفع الصورة" data-en="Upload Image">رفع الصورة</h3>
+                <p class="step-desc" data-ar="قم برفع صورة الأشعة السينية للأسنان بصيغة JPEG أو PNG من جهازك بسهولة" data-en="Upload X-ray image in JPEG or PNG format easily">
+                    قم برفع صورة الأشعة السينية للأسنان بصيغة JPEG أو PNG من جهازك بسهولة
+                </p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3 class="step-title" data-ar="التحليل الذكي" data-en="Smart Analysis">التحليل الذكي</h3>
+                <p class="step-desc" data-ar="يقوم الذكاء الاصطناعي بتحليل الصورة تلقائياً وتحديد المناطق المصابة خلال ثوانٍ" data-en="AI analyzes the image automatically in seconds">
+                    يقوم الذكاء الاصطناعي بتحليل الصورة تلقائياً وتحديد المناطق المصابة خلال ثوانٍ
+                </p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-icon">
+                    <i class="fas fa-file-medical"></i>
+                </div>
+                <h3 class="step-title" data-ar="النتائج والتقرير" data-en="Results & Report">النتائج والتقرير</h3>
+                <p class="step-desc" data-ar="احصل على تقرير تفصيلي يتضمن التشخيص، نسبة الثقة، والتوصيات العلاجية المقترحة" data-en="Get detailed report with diagnosis and recommendations">
+                    احصل على تقرير تفصيلي يتضمن التشخيص، نسبة الثقة، والتوصيات العلاجية المقترحة
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2 data-ar="جاهز لتجربة النظام؟" data-en="Ready to Try?">
+                جاهز لتجربة النظام؟
+            </h2>
+            <p data-ar="ابدأ الآن في استخدام DentalGuard واحصل على تشخيص دقيق وسريع لحالات الأسنان" data-en="Start using DentalGuard for accurate and fast diagnosis">
+                ابدأ الآن في استخدام DentalGuard واحصل على تشخيص دقيق وسريع لحالات الأسنان
+            </p>
+            <a href="/register" class="btn btn-primary" data-ar="ابدأ التحليل الآن" data-en="Start Analysis Now">
+                <span>ابدأ التحليل الآن</span>
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>
+                    <i class="fas fa-tooth"></i>
+                    <span>DentalGuard</span>
+                </h3>
+                <p data-ar="نظام ذكي لتشخيص أمراض الأسنان باستخدام الذكاء الاصطناعي، مصمم لخدمة أطباء الأسنان والمرضى" data-en="Smart dental diagnosis system using AI">
+                    نظام ذكي لتشخيص أمراض الأسنان باستخدام الذكاء الاصطناعي، مصمم لخدمة أطباء الأسنان والمرضى
+                </p>
+                <div class="social-links">
+                    <a href="#" class="social-link" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-link" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-link" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="social-link" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p data-ar="© 2025 DentalGuard. جميع الحقوق محفوظة." data-en="© 2025 DentalGuard. All rights reserved.">
+                © 2025 DentalGuard. جميع الحقوق محفوظة.
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+
+        function updateThemeIcon(theme) {
+            if (theme === 'dark') {
+                themeIcon.className = 'fas fa-sun';
+            } else {
+                themeIcon.className = 'fas fa-moon';
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        // Language Toggle
+        const langSwitch = document.getElementById('langSwitch');
+        const body = document.body;
+        const htmlRoot = document.querySelector('html');
+        
+        let currentLang = 'ar';
+        
+        langSwitch.addEventListener('click', () => {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            
+            // Update direction and language
+            if (currentLang === 'ar') {
+                htmlRoot.setAttribute('lang', 'ar');
+                htmlRoot.setAttribute('dir', 'rtl');
+                langSwitch.textContent = 'English';
+            } else {
+                htmlRoot.setAttribute('lang', 'en');
+                htmlRoot.setAttribute('dir', 'ltr');
+                langSwitch.textContent = 'عربي';
+            }
+            
+            // Update all text elements
+            document.querySelectorAll('[data-ar][data-en]').forEach(el => {
+                const newText = currentLang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+                
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = newText;
+                } else {
+                    el.textContent = newText;
+                }
+            });
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offset = 80;
+                    const targetPosition = target.offsetTop - offset;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Counter Animation
+        function animateCounter(element) {
+            const target = parseInt(element.getAttribute('data-count'));
+            const duration = 2000;
+            const steps = 60;
+            const increment = target / steps;
+            let current = 0;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+            }, duration / steps);
+        }
+
+        // Intersection Observer for Stats
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counters = entry.target.querySelectorAll('.stat-number');
+                    counters.forEach(counter => {
+                        animateCounter(counter);
+                    });
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        const statsSection = document.querySelector('.stats');
+        if (statsSection) {
+            statsObserver.observe(statsSection);
+        }
+
+        // Reveal Animation on Scroll
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { 
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        // Apply reveal animation to cards
+        document.querySelectorAll('.feature-card, .step-card, .stat-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            revealObserver.observe(el);
+        });
+
+        // Performance: Reduce animations on low-end devices
+        if (navigator.hardwareConcurrency <= 4) {
+            document.querySelectorAll('.gradient-orb').forEach(orb => {
+                orb.style.animation = 'none';
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+
+DENTALGUARD - INSTALLATION GUIDE
+=================================
+
+STEP-BY-STEP INSTALLATION:
+
+1. EXTRACT FILES
+   - Extract all files to: C:\DentalGuard
+   - DO NOT use paths with spaces or Arabic characters
+
+2. INSTALL PREREQUISITES
+   
+   a) Python 3.8+
+      - Download: https://www.python.org/downloads/
+      - ✅ CHECK "Add Python to PATH"
+      - Verify: Open CMD and type: python --version
+   
+   b) PHP 8.0+
+      - Download XAMPP: https://www.apachefriends.org/
+      - Install to default location
+      - Verify: Open CMD and type: php --version
+   
+   c) Composer
+      - Download: https://getcomposer.org/download/
+      - Follow installer
+      - Verify: Open CMD and type: composer --version
+
+3. RUN SETUP
+   
+   - Double-click: setup_portable.py
+   - OR open CMD in project folder and run: python setup_portable.py
+   - Wait 10-15 minutes for installation
+   - Follow on-screen instructions
+
+4. START PROJECT
+   
+   - Double-click: START_PROJECT.bat
+   - Two windows will open (AI Server + Laravel)
+   - Dashboard opens automatically at http://localhost:8000
+
+5. FIRST USE
+   
+   - Register new account
+   - Upload X-ray image
+   - View AI analysis results
+
+TROUBLESHOOTING:
+===============
+
+Problem: "Python not found"
+Solution: Reinstall Python with "Add to PATH" checked
+
+Problem: "Module not found"
+Solution: Run: python -m pip install [module_name]
+
+Problem: "Port 8000 already in use"
+Solution: 
+  - Open .env file
+  - Change APP_PORT=8000 to APP_PORT=8001
+  - Restart
+
+Problem: Model not loading
+Solution: Ensure models/dental_v10_best.pt exists (should be ~52 MB)
+
+DAILY USAGE:
+===========
+
+START: Double-click START_PROJECT.bat
+STOP:  Double-click STOP_PROJECT.bat
+
+Dashboard: http://localhost:8000
+AI Server: http://localhost:5000/health
+
+========================================
+For support, contact your project team
+========================================
