@@ -1,65 +1,76 @@
-# DentalGuard - Portable Installation
+# 🦷 DentalGuard - AI Dental Analysis System
 
-## Quick Start (Windows)
+A full-stack web application for dental image analysis using AI.
+
+---
+
+## 🚀 Overview
+
+DentalGuard is a smart system that allows users to upload dental images and receive AI-powered analysis, manage patient data, and track medical history.
+
+---
+
+## ✨ Features
+
+* 🧠 AI-powered dental image analysis
+* 📤 Upload X-ray / dental images
+* 📊 Dashboard with analysis history
+* 👨‍⚕️ Patient management system
+* 🌐 Multi-language support
+* ⚡ Fast processing (GPU supported)
+
+---
+
+## 🛠️ Tech Stack
+
+* Laravel (Backend)
+* Vue.js (Frontend)
+* Flask (AI Server)
+* SQLite / MySQL
+* PyTorch (AI Model)
+
+---
+
+## ⚙️ Installation (Portable Version)
 
 ### First Time Setup:
-1. Run `setup_portable.py` (double-click or run: `python setup_portable.py`)
-2. Wait for installation to complete (~10 minutes)
-3. Follow on-screen instructions
 
-### Daily Use:
+1. Run `setup_portable.py`
+2. Wait for installation (~10 minutes)
+3. Follow instructions
+
+### Run Project:
+
 1. Double-click `START_PROJECT.bat`
-2. Dashboard opens automatically at http://localhost:8000
-3. To stop: Double-click `STOP_PROJECT.bat`
+2. Open: http://localhost:8000
 
-## System Requirements
+---
 
-- Windows 10/11
-- Python 3.8+ (https://python.org)
-- PHP 8.0+ (XAMPP recommended: https://apachefriends.org)
-- Composer (https://getcomposer.org)
-- 4GB RAM minimum (8GB+ recommended)
-- 5GB free disk space
+## 📸 Screenshots
+![ChatPot](image-2.png)
+![Resulte](image-7.png)
+![Dashboard](image-3.png)
+![Login](image-4.png)
+![Register](image-5.png)
+![Start page](image-6.png)
 
-## Included Components
+---
 
-✅ AI Model (92.1% accuracy)
-✅ Flask AI Server
-✅ Laravel Backend
-✅ Vue.js Frontend
-✅ SQLite Database (portable)
+## 📌 Important Note
 
-## GPU Support
+AI model files are not included in this repository due to size limitations.
 
-If you have NVIDIA GPU:
-- PyTorch with CUDA will be installed automatically
-- Significantly faster processing
+---
 
-Without GPU:
-- Will use CPU (slower but functional)
+## 💡 Use Cases
 
-## Troubleshooting
+* Dental clinics
+* Medical AI systems
+* Healthcare startups
+* Academic projects
 
-### "Python not found"
-Install Python from python.org and check "Add to PATH"
+---
 
-### "Composer not found"
-Install Composer from getcomposer.org
+## 📄 License
 
-### Model not loading
-Ensure `models/dental_v10_best.pt` exists
-
-### Port already in use
-Change port in `.env`:
-- `AI_SERVER_PORT=5000` → `AI_SERVER_PORT=5001`
-- Restart servers
-
-## Support
-
-Created by: [Your Team Name]
-Project: DentalGuard AI Dental Analysis System
-Date: 2026-01-21
-
-## License
-
-Educational/Academic Use Only
+Educational / Academic Use Only
