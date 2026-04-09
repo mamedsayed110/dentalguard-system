@@ -1,0 +1,8 @@
+*.pt
+models/
+/vendor
+/node_modules
+.env
+/storage
+/datasets
+/logs

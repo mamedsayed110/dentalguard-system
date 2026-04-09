@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحتي الطبية - DentalGuard</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['IBM Plex Sans Arabic', 'sans-serif'] },
+                    colors: {
+                        dark: { bg: '#0f172a', surface: '#1e293b', border: '#334155' },
+                        brand: { 500: '#06b6d4', 600: '#0891b2' } // Cyan/Teal for friendly medical look
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom UI Tweaks */
+        body { @apply bg-slate-50 text-slate-800 transition-colors duration-300; }
+        .dark body { @apply bg-dark-bg text-slate-100; }
+
+        /* Glassmorphism that adapts to Dark Mode */
+        .glass {
+            @apply bg-white/80 dark:bg-dark-surface/80 backdrop-blur-xl border border-white/20 dark:border-white/5 shadow-sm;
+        }
+
+        /* Sidebar Links */
+        .nav-link {
+            @apply flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 text-slate-500 dark:text-slate-400 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-brand-500 hover:pl-6;
+        }
+        .nav-link.active {
+            @apply bg-brand-500 text-white shadow-lg shadow-brand-500/30 hover:pl-4;
+        }
+
+        /* Scanning Animation */
+        .scan-laser {
+            position: absolute; width: 100%; height: 4px; background: #06b6d4;
+            box-shadow: 0 0 20px #06b6d4; z-index: 20; top: 0;
+            animation: scanning 2.5s infinite ease-in-out; display: none;
+        }
+        @keyframes scanning { 0% { top: 0%; opacity: 0; } 50% { top: 100%; opacity: 1; } 100% { top: 0%; opacity: 0; } }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { @apply bg-slate-300 dark:bg-slate-700 rounded-full; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside class="w-72 hidden md:flex flex-col gap-2 p-6 bg-white dark:bg-dark-surface border-l border-slate-200 dark:border-dark-border transition-colors duration-300 z-50 shadow-sm">
+        
+        <!-- Logo Area -->
+        <div class="flex items-center gap-4 px-2 mb-8">
+            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-500 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-brand-500/30 shrink-0">
+                <i class="fa-solid fa-tooth text-xl"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-xl tracking-tight text-slate-800 dark:text-white">DentalGuard</h1>
+                <p class="text-[11px] text-slate-400 font-medium">بوابتك لصحة أفضل</p>
+            </div>
+        </div>
+
+        <!-- Menu Items -->
+        <nav class="flex-1 flex flex-col gap-1 overflow-y-auto">
+            
+            <div class="px-4 mb-2 mt-2">
+                <p class="text-xs font-bold text-slate-400/80 uppercase tracking-wider" data-tr="menu">القائمة الرئيسية</p>
+            </div>
+
+            <a href="#" onclick="switchTab('home')" id="nav-home" class="nav-link active group">
+                <div class="w-8 flex justify-center"><i class="fa-solid fa-house text-lg transition-transform group-hover:scale-110"></i></div>
+                <span class="font-medium" data-tr="home">الرئيسية</span>
+            </a>
+
+            <a href="#" onclick="switchTab('history')" id="nav-history" class="nav-link group">
+                <div class="w-8 flex justify-center"><i class="fa-solid fa-clipboard-list text-lg transition-transform group-hover:scale-110"></i></div>
+                <span class="font-medium" data-tr="my_records">سجل فحوصاتي</span>
+            </a>
+
+            <a href="#" onclick="switchTab('chat')" id="nav-chat" class="nav-link group">
+                <div class="w-8 flex justify-center"><i class="fa-solid fa-comments-medical text-lg transition-transform group-hover:scale-110"></i></div>
+                <span class="font-medium" data-tr="ai_consultant">المستشار الطبي</span>
+            </a>
+            
+            <!-- Separator -->
+            <div class="my-4 border-t border-slate-100 dark:border-white/5 mx-4"></div>
+
+            <div class="px-4 mb-2">
+                <p class="text-xs font-bold text-slate-400/80 uppercase tracking-wider" data-tr="settings">الإعدادات</p>
+            </div>
+
+            <a href="#" class="nav-link group">
+                <div class="w-8 flex justify-center"><i class="fa-solid fa-user-circle text-lg transition-transform group-hover:scale-110"></i></div>
+                <span class="font-medium" data-tr="profile">الملف الشخصي</span>
+            </a>
+        </nav>
+
+        <!-- User Profile (Bottom) -->
+        <div class="mt-auto pt-4 border-t border-slate-100 dark:border-white/5">
+            <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 flex items-center gap-3 border border-slate-100 dark:border-white/5 hover:border-brand-200 transition-colors cursor-pointer group">
+                <div class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-500 overflow-hidden shrink-0 group-hover:ring-2 ring-brand-200 transition-all">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold truncate text-slate-700 dark:text-slate-200" id="sidebarUserName">مستخدم</p>
+                    <p class="text-[10px] text-slate-400 truncate">عضو مميز</p>
+                </div>
+                <button onclick="logout()" class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-lg transition-all" title="تسجيل خروج">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col relative h-full bg-slate-50 dark:bg-dark-bg transition-colors duration-300">
+        
+        <!-- Header -->
+        <header class="h-20 flex items-center justify-between px-8 z-10">
+            <h2 class="text-2xl font-bold text-slate-800 dark:text-white" id="pageTitle" data-tr="welcome">مرحباً بك 👋</h2>
+            
+            <div class="flex gap-3">
+                <button onclick="toggleTheme()" class="w-10 h-10 rounded-xl bg-white dark:bg-dark-surface border border-slate-200 dark:border-dark-border flex items-center justify-center text-slate-600 dark:text-slate-300 hover:shadow-md transition">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <button onclick="toggleLang()" class="px-4 h-10 rounded-xl bg-white dark:bg-dark-surface border border-slate-200 dark:border-dark-border font-bold text-sm text-slate-700 dark:text-slate-200 hover:shadow-md transition">
+                    English
+                </button>
+            </div>
+        </header>
+
+        <!-- Content Views -->
+        <div class="flex-1 overflow-y-auto p-8 pt-0 scroll-smooth">
+            
+            <!-- VIEW: HOME (Analysis) -->
+            <div id="view-home" class="h-full flex flex-col gap-6">
+                <!-- Welcome Card -->
+                <div class="p-8 rounded-3xl bg-gradient-to-r from-brand-500 to-blue-600 text-white shadow-xl shadow-brand-500/20 relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h3 class="text-2xl font-bold mb-2" data-tr="check_health">اطمئن على صحة أسنانك الآن</h3>
+                        <button onclick="triggerUpload()" class="bg-white text-brand-600 px-6 py-3 rounded-xl font-bold hover:bg-slate-100 transition shadow-lg inline-flex items-center gap-2">
+                            <i class="fa-solid fa-camera"></i> <span data-tr="start_scan">بدء فحص جديد</span>
+                        </button>
+                    </div>
+                    <!-- Decor -->
+                    <i class="fa-solid fa-tooth absolute -bottom-10 -left-10 text-9xl text-white opacity-10 rotate-12"></i>
+                </div>
+
+                <!-- Analysis Workspace (Hidden until upload) -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8">
+                    
+                    <!-- Left: Upload/Canvas -->
+                    <div class="lg:col-span-7 flex flex-col">
+                        <div class="glass rounded-3xl p-1 relative overflow-hidden min-h-[400px] flex flex-col">
+                            <!-- Upload State -->
+                            <div id="uploadState" class="absolute inset-0 bg-white dark:bg-dark-surface z-20 flex flex-col items-center justify-center transition-all duration-500">
+                                <div class="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4 animate-bounce-slow">
+                                    <i class="fa-solid fa-cloud-arrow-up text-3xl text-brand-500"></i>
+                                </div>
+                                <h4 class="text-lg font-bold dark:text-white" data-tr="upload_area">منطقة التحليل</h4>
+                                <p class="text-slate-400 text-sm mt-1" data-tr="upload_hint">اضغط "بدء فحص جديد" لرفع الصورة</p>
+                                <input type="file" id="fileInput" hidden accept="image/*">
+                            </div>
+
+                            <!-- Result Canvas -->
+                            <div class="relative flex-1 bg-black rounded-[20px] overflow-hidden flex items-center justify-center">
+                                <canvas id="resultCanvas" class="max-w-full max-h-full"></canvas>
+                                <div id="scanLaser" class="scan-laser"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Results & Quick Chat -->
+                    <div class="lg:col-span-5 flex flex-col gap-4">
+                        <!-- Result Card -->
+                        <div class="glass p-6 rounded-3xl flex-1 flex flex-col">
+                            <h3 class="font-bold text-lg mb-4 flex items-center gap-2 dark:text-white">
+                                <i class="fa-solid fa-file-waveform text-brand-500"></i> <span data-tr="result">نتيجة الفحص</span>
+                            </h3>
+                            
+                            <div id="reportContent" class="flex-1 bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4 text-sm text-slate-600 dark:text-slate-300 mb-4 overflow-y-auto">
+                                <div class="h-full flex flex-col items-center justify-center text-center opacity-50">
+                                    <i class="fa-solid fa-hourglass-start text-3xl mb-2"></i>
+                                    <p data-tr="waiting">بانتظار الصورة...</p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <button onclick="resetApp()" class="py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                                    <span data-tr="retry">إعادة</span>
+                                </button>
+                                <button onclick="downloadPDF()" id="pdfBtn" disabled class="py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg transition">
+                                    <span data-tr="save_pdf">حفظ PDF</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: CHAT -->
+            <div id="view-chat" class="hidden h-full pb-6">
+                <div class="glass h-full rounded-3xl flex flex-col overflow-hidden">
+                    <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-brand-100 dark:bg-brand-900/30 flex items-center justify-center">
+                                <i class="fa-solid fa-robot text-brand-600 dark:text-brand-400"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold dark:text-white" data-tr="consultant">المستشار الطبي</h3>
+                                <p class="text-xs text-green-500 font-medium">● متصل الآن</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="chatBox" class="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-50/50 dark:bg-dark-bg/50">
+                        <div class="flex gap-3">
+                            <div class="w-8 h-8 rounded-full bg-brand-500 flex items-center justify-center flex-shrink-0 text-white text-xs"><i class="fa-solid fa-robot"></i></div>
+                            <div class="bg-white dark:bg-dark-surface border border-slate-100 dark:border-slate-700 p-4 rounded-2xl rounded-tr-none shadow-sm text-sm text-slate-700 dark:text-slate-200 max-w-[80%]">
+                                <p data-tr="chat_intro">أهلاً بك! أنا هنا للإجابة على استفساراتك بخصوص صحة أسنانك أو شرح نتائج الأشعة.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form onsubmit="handleChat(event)" class="p-4 bg-white dark:bg-dark-surface border-t border-slate-100 dark:border-slate-700 flex gap-3">
+                        <input id="chatInput" type="text" placeholder="اكتب سؤالك هنا..." class="flex-1 bg-slate-100 dark:bg-slate-900 border-none rounded-xl px-5 py-3 text-sm focus:ring-2 focus:ring-brand-500 outline-none transition dark:text-white">
+                        <button type="submit" class="w-12 h-12 bg-brand-500 text-white rounded-xl hover:bg-brand-600 transition flex items-center justify-center shadow-lg shadow-brand-500/20">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- VIEW: HISTORY -->
+            <div id="view-history" class="hidden h-full pb-6">
+                <div class="glass h-full rounded-3xl p-6 overflow-hidden flex flex-col">
+                    <h3 class="text-xl font-bold mb-6 dark:text-white" data-tr="records_title">سجل فحوصاتي السابقة</h3>
+                    <div class="overflow-auto flex-1">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-slate-400 uppercase bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                                <tr>
+                                    <th class="px-6 py-3 rounded-l-lg">التاريخ</th>
+                                    <th class="px-6 py-3">نوع الفحص</th>
+                                    <th class="px-6 py-3">النتيجة</th>
+                                    <th class="px-6 py-3 rounded-r-lg">الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTable" class="divide-y divide-slate-100 dark:divide-slate-700">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // --- Configuration ---
+        const API_URL = 'http://localhost:5000';
+        const fileInput = document.getElementById('fileInput');
+        const canvas = document.getElementById('resultCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Translations
+        const lang = {
+            ar: {
+                menu: "القائمة", home: "الرئيسية", my_records: "سجل فحوصاتي", ai_consultant: "المستشار الطبي",
+                settings: "الإعدادات", profile: "الملف الشخصي", welcome: "مرحباً بك 👋",
+                check_health: "اطمئن على صحة أسنانك الآن", ai_desc: "تحليل فوري باستخدام الذكاء الاصطناعي للكشف عن التسوس.",
+                start_scan: "بدء فحص جديد", upload_area: "منطقة التحليل", upload_hint: "اضغط الزر لرفع الصورة",
+                result: "نتيجة الفحص", waiting: "بانتظار الصورة...", retry: "إعادة", save_pdf: "حفظ PDF",
+                consultant: "المستشار الطبي", chat_intro: "أهلاً بك! أنا هنا للإجابة على استفساراتك.",
+                records_title: "سجل فحوصاتي السابقة"
+            },
+            en: {
+                menu: "Menu", home: "Home", my_records: "My Records", ai_consultant: "Medical Consultant",
+                settings: "Settings", profile: "Profile", welcome: "Welcome Back 👋",
+                check_health: "Check Your Dental Health", ai_desc: "Instant AI analysis to detect caries and gum issues.",
+                start_scan: "Start New Scan", upload_area: "Analysis Area", upload_hint: "Click button to upload",
+                result: "Scan Result", waiting: "Waiting for image...", retry: "Retry", save_pdf: "Save PDF",
+                consultant: "Medical AI", chat_intro: "Hello! I'm here to answer your dental questions.",
+                records_title: "My Previous Scans"
+            }
+        };
+        let currentLang = 'ar';
+
+        // --- Core Functions ---
+
+        // 1. Tab Switching
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if(activeNav) activeNav.classList.add('active');
+
+            ['home', 'chat', 'history'].forEach(view => {
+                document.getElementById(`view-${view}`).classList.add('hidden');
+            });
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+
+            if(tabId === 'history') loadHistory();
+        }
+
+        // 2. Theme & Lang
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+
+        function toggleLang() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            document.documentElement.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+            document.documentElement.setAttribute('lang', currentLang);
+            document.querySelectorAll('[data-tr]').forEach(el => {
+                const key = el.getAttribute('data-tr');
+                if(lang[currentLang][key]) el.innerText = lang[currentLang][key];
+            });
+        }
+
+        // Initialize Settings
+        if(localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+        
+        // User Name
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if(user.name) document.getElementById('sidebarUserName').innerText = user.name;
+
+        // --- AI Analysis Logic ---
+
+        function triggerUpload() { document.getElementById('fileInput').click(); }
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+
+            // UI
+            document.getElementById('uploadState').classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('scanLaser').style.display = 'block';
+            
+            // Image
+            const img = new Image();
+            img.onload = () => {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                performAnalysis(file);
+            };
+            img.src = URL.createObjectURL(file);
+        });
+
+        async function performAnalysis(file) {
+            const formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                const res = await fetch(`${API_URL}/predict`, { method: 'POST', body: formData });
+                const data = await res.json();
+
+                // Stop Animation
+                document.getElementById('scanLaser').style.display = 'none';
+
+                // Draw Boxes
+                data.detections.forEach(det => {
+                    const [x,y,w,h] = det.box;
+                    ctx.strokeStyle = det.color;
+                    ctx.lineWidth = 6;
+                    ctx.strokeRect(x,y,w,h);
+                    
+                    // Label
+                    ctx.fillStyle = det.color;
+                    ctx.font = "bold 24px Arial";
+                    ctx.fillText(det.label, x, y-10);
+                });
+
+                // Report
+                const reportDiv = document.getElementById('reportContent');
+                reportDiv.innerHTML = `
+                    <div class="space-y-4 animate-fade-in">
+                        <div class="p-3 bg-white dark:bg-dark-bg rounded-xl border border-slate-100 dark:border-slate-700">
+                            <span class="text-xs text-slate-400 block mb-1">ملخص الحالة</span>
+                            <p class="font-medium dark:text-white">${data.report_summary}</p>
+                        </div>
+                        <div class="p-3 bg-brand-50 dark:bg-brand-900/20 rounded-xl border border-brand-100 dark:border-brand-800">
+                            <span class="text-xs text-brand-600 block mb-1">نصيحة طبية</span>
+                            <p class="font-medium text-brand-700 dark:text-brand-300">${data.doctor_advice}</p>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('pdfBtn').disabled = false;
+
+            } catch (err) {
+                alert("تعذر الاتصال بالخادم");
+                resetApp();
+            }
+        }
+
+        function resetApp() {
+            document.getElementById('uploadState').classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('scanLaser').style.display = 'none';
+            document.getElementById('reportContent').innerHTML = '<div class="h-full flex flex-col items-center justify-center text-center opacity-50"><i class="fa-solid fa-hourglass-start text-3xl mb-2"></i><p>بانتظار الصورة...</p></div>';
+            document.getElementById('pdfBtn').disabled = true;
+            fileInput.value = '';
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+        }
+
+        // --- Chat & History ---
+
+        async function handleChat(e) {
+            e.preventDefault();
+            const input = document.getElementById('chatInput');
+            const msg = input.value;
+            if(!msg) return;
+
+            const box = document.getElementById('chatBox');
+            box.innerHTML += `<div class="flex justify-end mb-4"><div class="bg-brand-500 text-white px-4 py-3 rounded-2xl rounded-tl-none max-w-[85%] text-sm shadow-md">${msg}</div></div>`;
+            input.value = '';
+            box.scrollTop = box.scrollHeight;
+
+            try {
+                const res = await fetch(`${API_URL}/chat`, {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({message: msg})
+                });
+                const data = await res.json();
+                
+                box.innerHTML += `
+                    <div class="flex gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-brand-500 flex items-center justify-center flex-shrink-0 text-white text-xs"><i class="fa-solid fa-robot"></i></div>
+                        <div class="bg-white dark:bg-dark-surface border border-slate-100 dark:border-slate-700 px-4 py-3 rounded-2xl rounded-tr-none shadow-sm text-sm text-slate-700 dark:text-slate-200 max-w-[85%]">
+                            ${data.response}
+                        </div>
+                    </div>`;
+                box.scrollTop = box.scrollHeight;
+            } catch(e) {}
+        }
+
+        async function loadHistory() {
+            try {
+                const res = await fetch(`${API_URL}/history`);
+                const data = await res.json();
+                const tbody = document.getElementById('historyTable');
+                tbody.innerHTML = '';
+                
+                data.forEach(row => {
+                    const statusClass = row.status === 'green' ? 'text-green-600 bg-green-50' : 'text-yellow-600 bg-yellow-50';
+                    tbody.innerHTML += `
+                        <tr class="bg-white dark:bg-dark-surface border-b dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800">
+                            <td class="px-6 py-4 font-medium dark:text-white">${row.date}</td>
+                            <td class="px-6 py-4 dark:text-slate-300">${row.type}</td>
+                            <td class="px-6 py-4 dark:text-slate-300">${row.result}</td>
+                            <td class="px-6 py-4"><span class="${statusClass} text-xs font-bold px-2.5 py-0.5 rounded-lg">${row.status === 'green' ? 'مطمئن' : 'يحتاج متابعة'}</span></td>
+                        </tr>
+                    `;
+                });
+            } catch(e) {}
+        }
+
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text("Dental Checkup Report", 10, 10);
+            doc.save("My_Report.pdf");
+        }
+
+        function logout() { localStorage.clear(); window.location.href = '/'; }
+    </script>
+</body>
+</html>

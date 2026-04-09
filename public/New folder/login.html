@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - DentalGuard</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --text-primary: #1a2332;
+            --text-secondary: #4a5568;
+            --medical-blue: #0066cc;
+            --accent-gradient: linear-gradient(135deg, #0066cc 0%, #14b8a6 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(26, 35, 50, 0.08);
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --input-bg: #f8fafc;
+            --input-border: rgba(26, 35, 50, 0.1);
+            --input-focus: #0066cc;
+            --error-color: #ef4444;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a0e1a;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --medical-blue: #3b82f6;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #14b8a6 100%);
+            --card-bg: rgba(26, 35, 50, 0.95);
+            --card-border: rgba(148, 163, 184, 0.12);
+            --glass-bg: rgba(26, 35, 50, 0.75);
+            --input-bg: rgba(26, 35, 50, 0.5);
+            --input-border: rgba(148, 163, 184, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .bg-decoration { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; pointer-events: none; }
+        .gradient-orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.25; animation: float 25s infinite ease-in-out; }
+        .orb-1 { width: 500px; height: 500px; background: var(--accent-gradient); top: -150px; right: -100px; }
+        .orb-2 { width: 400px; height: 400px; background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%); bottom: -100px; left: -100px; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(30px, -30px); } }
+
+        nav { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(24px); border-bottom: 1px solid var(--card-border); padding: 1rem 2rem; }
+        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+
+        .icon-btn, .lang-btn {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            color: var(--text-primary); transition: all 0.3s ease; cursor: pointer;
+        }
+        .icon-btn:hover, .lang-btn:hover { background: var(--medical-blue); color: white; border-color: var(--medical-blue); }
+        .icon-btn { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        .lang-btn { padding: 0.6rem 1.2rem; border-radius: 10px; font-weight: 600; font-size: 0.875rem; }
+
+        .login-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+        .login-card { background: var(--card-bg); backdrop-filter: blur(24px); border: 1px solid var(--card-border); border-radius: 24px; padding: 3rem; width: 100%; max-width: 480px; box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1); }
+        
+        .login-header { text-align: center; margin-bottom: 2.5rem; }
+        .login-icon { width: 80px; height: 80px; background: var(--accent-gradient); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 2.5rem; color: white; }
+        
+        .form-group label { display: block; margin-bottom: 0.6rem; font-weight: 600; color: var(--text-primary); }
+        .input-container input { width: 100%; padding: 1rem; background: var(--input-bg); border: 2px solid var(--input-border); border-radius: 12px; color: var(--text-primary); transition: all 0.3s; }
+        .input-container input:focus { border-color: var(--input-focus); outline: none; background: var(--bg-primary); }
+        
+        .btn { width: 100%; padding: 1.1rem; background: var(--accent-gradient); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.3s; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 102, 204, 0.3); }
+        
+        .divider span { background: var(--card-bg); color: var(--text-secondary); padding: 0 1rem; position: relative; z-index: 1; }
+        .divider { text-align: center; margin: 2rem 0; position: relative; }
+        .divider::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: var(--card-border); z-index: 0; }
+        
+        .register-link { text-align: center; color: var(--text-secondary); }
+        .register-link a { color: var(--medical-blue); text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="bg-decoration">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+    </div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <i class="fas fa-tooth"></i>
+                <span>DentalGuard</span>
+            </a>
+            <div style="display: flex; gap: 1rem;">
+                <button class="icon-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+                <button class="lang-btn" id="langSwitch">English</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-icon"><i class="fas fa-sign-in-alt"></i></div>
+                <h1 data-ar="تسجيل الدخول" data-en="Sign In" style="margin-bottom: 0.5rem; font-weight: 800; font-size: 2rem;">تسجيل الدخول</h1>
+                <p data-ar="مرحباً بك مجدداً في DentalGuard" data-en="Welcome back to DentalGuard" style="color: var(--text-secondary);">مرحباً بك مجدداً في DentalGuard</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label data-ar="البريد الإلكتروني" data-en="Email Address">البريد الإلكتروني</label>
+                    <div class="input-container">
+                        <input type="email" id="email" required placeholder="example@email.com">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label data-ar="كلمة المرور" data-en="Password">كلمة المرور</label>
+                    <div class="input-container">
+                        <input type="password" id="password" required placeholder="********">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" id="submitBtn">
+                    <span data-ar="تسجيل الدخول" data-en="Sign In">تسجيل الدخول</span>
+                </button>
+            </form>
+
+            <div class="divider"><span data-ar="أو" data-en="or">أو</span></div>
+
+            <div class="register-link">
+                <span data-ar="ليس لديك حساب؟" data-en="Don't have an account?">ليس لديك حساب؟</span>
+                <a href="/register" data-ar="إنشاء حساب جديد" data-en="Create new account">إنشاء حساب جديد</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. إعدادات الثيم واللغة ---
+        const themeToggle = document.getElementById('themeToggle');
+        const langSwitch = document.getElementById('langSwitch');
+        const html = document.documentElement;
+        
+        // Load settings
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        const savedLang = localStorage.getItem('lang') || 'ar';
+        
+        // Apply settings
+        applyTheme(savedTheme);
+        applyLang(savedLang);
+
+        themeToggle.addEventListener('click', () => {
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+        });
+
+        langSwitch.addEventListener('click', () => {
+            const current = html.getAttribute('lang');
+            const next = current === 'ar' ? 'en' : 'ar';
+            applyLang(next);
+        });
+
+        function applyTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            themeToggle.querySelector('i').className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        function applyLang(lang) {
+            html.setAttribute('lang', lang);
+            html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+            localStorage.setItem('lang', lang);
+            langSwitch.textContent = lang === 'ar' ? 'English' : 'عربي';
+            
+            // Translate all elements
+            document.querySelectorAll('[data-ar]').forEach(el => {
+                el.innerText = lang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+            });
+        }
+
+        // --- 2. منطق تسجيل الدخول ---
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = html.getAttribute('lang') === 'ar' ? 'جاري التحقق...' : 'Verifying...';
+
+            try {
+                const response = await fetch('http://localhost:8000/api/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+                    body: JSON.stringify({
+                        email: document.getElementById('email').value,
+                        password: document.getElementById('password').value
+                    })
+                });
+                const data = await response.json();
+
+                if (response.ok && data.token) {
+                    localStorage.setItem('auth_token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = '/dashboard';
+                } else {
+                    alert(data.message || 'Error');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Connection Error');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalText;
+            }
+        });
+    </script>
+</body>
+</html>
